@@ -30,3 +30,5 @@ wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/docker-
 # Dapatkan file nginx.conf
 wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/nginx.conf
 
+# Dapatkan file php.ini
+wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/php.ini
