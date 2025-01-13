@@ -38,3 +38,6 @@ docker compose up -d
 
 # Cek docker berjalan
 docker ps
+
+# Script telah selesai berjalan
+echo "Instalasi wordpress selesai!"
