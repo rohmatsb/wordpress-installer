@@ -20,3 +20,11 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 # Verifikasi berhasil install Docker
 sudo docker run hello-world && echo "Docker sukses terinstall! Melanjutkan..." || echo "Docker gagal berjalan! Menghentikan..."
 
+# Buat folder wordpress dan cd ke wordpress
+mkdir wordpress
+cd wordpress
+
+# Dapatkan file docker compose
+wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/docker-compose.yml
+
+#
