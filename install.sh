@@ -50,6 +50,7 @@ wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/php.ini
 docker compose up -d
 
 # Cek docker berjalan
+clear
 docker ps
 
 # Jeda untuk melihat hasil docker ps
