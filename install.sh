@@ -32,3 +32,9 @@ wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/nginx.c
 
 # Dapatkan file php.ini
 wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/php.ini
+
+# Compose docker
+docker compose up -d
+
+# Cek docker berjalan
+docker ps
