@@ -27,4 +27,6 @@ cd wordpress
 # Dapatkan file docker compose
 wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/docker-compose.yml
 
-#
+# Dapatkan file nginx.conf
+wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/nginx.conf
+
