@@ -39,5 +39,9 @@ docker compose up -d
 # Cek docker berjalan
 docker ps
 
+# Jeda untuk melihat hasil docker ps
+sleep 5
+
 # Script telah selesai berjalan
+clear
 echo "Instalasi wordpress selesai!"
