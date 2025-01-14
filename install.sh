@@ -21,7 +21,8 @@ install_docker() {
 
     # Install Docker
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    
+
+    # Check docker running or not
     if ! sudo docker run hello-world > /dev/null 2>&1; then
       echo "Docker installation failed. Exiting..."
       exit 1
@@ -85,7 +86,10 @@ wget -O nginx.conf https://raw.githubusercontent.com/rohmatsb/wordpress-installe
 docker compose up -d
 
 # Verify if the containers are running
+clear
 docker ps
+sleep 5
 
 # Script completion message
-echo "WordPress site installed successfully on port $port with directory '$site_dir'."
+clear
+echo "WordPress site installed successfully on port $port"
