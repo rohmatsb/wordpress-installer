@@ -56,7 +56,7 @@ mkdir -p $site_dir
 cd $site_dir
 
 # Download the Docker Compose template
-wget -O docker-compose.yml https://example.com/docker-compose-template.yml
+wget -O docker-compose.yml https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/docker-compose.yml
 
 # Replace placeholders in docker-compose.yml
 sed -i "s/DB_CONTAINER/wordpress_db_port_$port/" docker-compose.yml
