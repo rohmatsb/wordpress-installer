@@ -1,61 +1,80 @@
 #!/bin/bash
 
-# Install paket yang dibutuhkan
-sudo apt update
-sudo apt install wget -y
+# Function to check if Docker is installed
+install_docker() {
+  if ! command -v docker &> /dev/null; then
+    echo "Docker not found. Installing Docker..."
+    sudo apt update
+    sudo apt install -y ca-certificates curl gnupg
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt update
+    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    if ! sudo docker run hello-world > /dev/null 2>&1; then
+      echo "Docker installation failed. Exiting..."
+      exit 1
+    fi
+    echo "Docker successfully installed."
+  else
+    echo "Docker is already installed."
+  fi
+}
 
-# Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl -y
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
+# Function to check if a port is already in use
+check_port() {
+  local port=$1
+  if sudo lsof -i :$port > /dev/null 2>&1; then
+    return 1
+  else
+    return 0
+  fi
+}
 
-# Add the repository to Apt sources:
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
+# Install Docker if not already installed
+install_docker
 
-# Install Docker (Latest)
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+# Prompt user for port number
+while true; do
+  read -p "Enter the port number to use for this WordPress site: " port
+  if [[ ! $port =~ ^[0-9]+$ ]] || ((port < 1 || port > 65535)); then
+    echo "Invalid port number. Please enter a number between 1 and 65535."
+    continue
+  fi
 
-# Verifikasi berhasil install Docker
-if sudo docker run hello-world > /dev/null 2>&1; then
-  clear
-  echo "Docker sukses terinstall! Melanjutkan..."
-  sleep 3
-else
-  clear
-  echo "Docker gagal berjalan! Menghentikan..."
-  sleep 3
-  exit 1
-fi
+  if check_port $port; then
+    echo "Port $port is available."
+    break
+  else
+    echo "Port $port is already in use. Please choose another port."
+  fi
+done
 
-# Buat folder wordpress dan cd ke wordpress
-mkdir wordpress
-cd wordpress
+# Define directory name based on the port
+site_dir="wordpress_port_$port"
+mkdir -p $site_dir
+cd $site_dir
 
-# Dapatkan file docker compose
-wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/docker-compose.yml
+# Download the Docker Compose template
+wget -O docker-compose.yml https://example.com/docker-compose-template.yml
 
-# Dapatkan file nginx.conf
-wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/nginx.conf
+# Replace placeholders in docker-compose.yml
+sed -i "s/DB_CONTAINER/wordpress_db_port_$port/" docker-compose.yml
+sed -i "s/APP_CONTAINER/wordpress_app_port_$port/" docker-compose.yml
+sed -i "s/NGINX_CONTAINER/wordpress_webserver_port_$port/" docker-compose.yml
+sed -i "s/DB_VOLUME/db_data_port_$port/" docker-compose.yml
+sed -i "s/APP_VOLUME/wp_data_port_$port/" docker-compose.yml
+sed -i "s/PORT/$port/" docker-compose.yml
 
-# Dapatkan file php.ini
-wget https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/php.ini
+# Download configuration files
+wget -O php.ini https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/php.ini
+wget -O nginx.conf https://raw.githubusercontent.com/rohmatsb/wordpress-installer/main/nginx.conf
 
-# Compose docker
+# Start Docker containers
 docker compose up -d
 
-# Cek docker berjalan
-clear
+# Verify if the containers are running
 docker ps
 
-# Jeda untuk melihat hasil docker ps
-sleep 5
-
-# Script telah selesai berjalan
-clear
-echo "Instalasi wordpress selesai!"
+# Script completion message
+echo "WordPress site installed successfully on port $port with directory '$site_dir'."
