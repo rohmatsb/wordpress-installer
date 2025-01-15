@@ -3,6 +3,8 @@
 # Function to check if Docker is installed
 install_docker() {
   if ! command -v docker &> /dev/null; then
+
+    # Print pesan docker tidak ditemukan
     echo "Docker not found. Installing Docker..."
     
     # Add Docker's official GPG key:
@@ -22,12 +24,15 @@ install_docker() {
     # Install Docker
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-    # Check docker running or not
+    # Check if Docker is running
     if ! sudo docker run hello-world > /dev/null 2>&1; then
       echo "Docker installation failed. Exiting..."
       exit 1
+    else
+      echo "Docker successfully installed."
     fi
-    echo "Docker successfully installed."
+
+  # melanjutkan if-else baris ke-5
   else
     echo "Docker is already installed."
   fi
