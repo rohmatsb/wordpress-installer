@@ -48,9 +48,6 @@ check_port() {
   fi
 }
 
-# Install Docker if not already installed
-install_docker
-
 # Prompt user for port number
 while true; do
   read -p "Enter the port number to use for this WordPress site: " port
@@ -66,6 +63,9 @@ while true; do
     echo "Port $port is already in use. Please choose another port."
   fi
 done
+
+# Install Docker if not already installed
+install_docker
 
 # Define directory name based on the port
 site_dir="wordpress_port_$port"
